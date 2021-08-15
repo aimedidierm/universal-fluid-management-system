@@ -2,6 +2,15 @@
 require '../php-includes/connect.php';
 require 'php-includes/check-login.php';
 
+$sql = "SELECT *  FROM manager WHERE email= ? limit 1";
+$stmt = $db->prepare($sql);
+$stmt->execute(array($_SESSION['code']));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$names = $row['names'];
+$phone = $row['phone'];
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,7 +38,53 @@ require 'php-includes/check-login.php';
 <div class="row">
 <div class="col-md-12">
 
+<div class="col-md-12"></div>
 
+<div class="col-md-4 panel">
+<!-- sign in form begins -->  
+  <form class="form-horizontal" name="form" action="php-includes/update.php" method="POST">
+<fieldset>
+
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-12 control-label" for="name"></label>  
+  <div class="col-md-12">
+  <input id="name" name="name" placeholder="Enter your name" class="form-control input-md" type="text" value="<?php echo $names ?>">
+  </div>
+</div>
+
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-12 control-label" for="mob"></label>  
+  <div class="col-md-12">
+  <input id="mob" name="mob" placeholder="Enter your mobile number" class="form-control input-md" type="number" value="<?php echo $phone ?>">
+    
+  </div>
+</div>
+
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-12 control-label" for="password"></label>
+  <div class="col-md-12">
+    <input id="password" name="password" placeholder="Enter your password" class="form-control input-md" type="password">
+    
+  </div>
+</div>
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-12 control-label" for=""></label>
+  <div class="col-md-12"> 
+    <input  type="submit" class="sub" value="Update" class="btn btn-primary"/>
+  </div>
+</div>
+
+</fieldset>
+</form>
+</div><!--col-md-6 end-->
+</div></div>
 
 
 </div>
