@@ -26,7 +26,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#"><b>UFMS - User</b></a>
+      <a class="navbar-brand" href="#"><b>UFMS - Manager</b></a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -34,6 +34,7 @@
       <ul class="nav navbar-nav">
         <li><a href="dashboard.php"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span>&nbsp;Dashboard</a></li>
         <li><a href="account.php"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Account</a></li>
+        <li><a href="users.php"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;Users</a></li>
 	  </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
