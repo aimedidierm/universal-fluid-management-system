@@ -14,8 +14,8 @@ void setup()
   lcd.backlight();
   lcd.setCursor(0,0);
   lcd.print("Universal Fluid");
-  lcd.setCursor(4,1);
-  lcd.print("M system");
+  lcd.setCursor(0,1);
+  lcd.print("MNGMNT system");
   lcd.setCursor(0,2);
   delay(2000);
   lcd.print(" Ultra sonic");
