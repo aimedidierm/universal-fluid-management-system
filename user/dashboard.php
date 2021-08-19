@@ -32,7 +32,7 @@ require 'php-includes/check-login.php';
 <style>
 #chartdiv {
   width: 25%;
-  height: 500px;
+  height: 400px;
 }
 
 </style>
@@ -42,6 +42,27 @@ require 'php-includes/check-login.php';
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
+<?php
+$sql = "SELECT *  FROM user WHERE email= ? limit 1";
+$stmt = $db->prepare($sql);
+$stmt->execute(array($_SESSION['code']));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$tank_id = $row['tank_id'];
+// Kureba ibi mukigega
+$sql = "SELECT s.tank_id, s.level, s.volume, t.names, t.id FROM status AS s JOIN tanks AS t WHERE t.id = s.tank_id AND s.tank_id = ? limit 1";
+$stmt = $db->prepare($sql);
+$stmt->execute(array($tank_id));
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$level = $row['level'];
+$volume = $row['volume'];
+$names = $row['names'];
+if(isset($_POST['open'])){
+  // Gufungura amazi
+}
+if(isset($_POST['close'])){
+  // Gufunga amazi
+}
+?>
 <!-- Chart code -->
 <script>
 am4core.ready(function() {
@@ -56,10 +77,11 @@ var chart = am4core.create("chartdiv", am4charts.XYChart3D);
 chart.titles.create().text = "Universal fluid management system";
 
 // Add data
+
 chart.data = [{
-  "category": "Huye tank",
-  "value1": 30,
-  "value2": 70
+  "category": '<?php echo $names ?>',
+  "value1": '<?php echo $level ?>',
+  "value2": '<?php echo 100 - $level ?>'
 }];
 
 // Create axes
@@ -107,7 +129,24 @@ series2.columns.template.strokeWidth = 2;
 </script>
 
 <!-- HTML -->
-<div id="chartdiv"></div>
+<div id="chartdiv">
+</div>
+<div>
+  <h1>
+  <?php
+  $total = $level/100 * $volume;
+  echo $total;
+  ?>
+  L
+  </h1>
+  <form role="form" method="post" >
+    <fieldset>
+    <input  type="submit"  value="Open"  name="open" class="btn btn-primary"/>
+    <input  type="submit"  value="Close" name="close" class="btn btn-danger"/>
+    </fieldset>
+  </form>
+</div>
+<br>
 </div>
 </div>
 </div>
