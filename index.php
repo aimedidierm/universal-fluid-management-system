@@ -67,6 +67,11 @@
 </div><!--header row closed-->
 </div>
 <div class="bg1">
-
+</div>
+<div class="row footer">
+<div class="col-md-3 box">
+<a href="#" target="_blank">2021 Universal fluid management system</a>
+</div>
+</div>
 </body>
 </html>

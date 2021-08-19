@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 04, 2021 at 11:13 AM
+-- Generation Time: Aug 19, 2021 at 06:33 PM
 -- Server version: 8.0.26-0ubuntu0.20.04.2
 -- PHP Version: 7.4.3
 
@@ -36,6 +36,13 @@ CREATE TABLE `admin` (
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `names`, `email`, `phone`, `password`) VALUES
+(1, 'Aime Didier Admin', 'admin@gmail.com', '0788750979', '3b081fd5426c134088a9b1466ff4c224');
+
 -- --------------------------------------------------------
 
 --
@@ -48,8 +55,15 @@ CREATE TABLE `manager` (
   `email` varchar(255) NOT NULL,
   `phone` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `tank_id` int NOT NULL
+  `tank_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `manager`
+--
+
+INSERT INTO `manager` (`id`, `names`, `email`, `phone`, `password`, `tank_id`) VALUES
+(1, 'Aime Didier Manager', 'manager@gmail.com', '0788750979', '3b081fd5426c134088a9b1466ff4c224', 1);
 
 -- --------------------------------------------------------
 
@@ -61,9 +75,17 @@ CREATE TABLE `status` (
   `id` int NOT NULL,
   `tank_id` int NOT NULL,
   `level` varchar(255) NOT NULL,
+  `volume` int NOT NULL,
   `status` set('open','closed') NOT NULL DEFAULT 'open',
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `status`
+--
+
+INSERT INTO `status` (`id`, `tank_id`, `level`, `volume`, `status`, `time`) VALUES
+(1, 1, '25', 5, 'closed', '2021-08-14 19:00:16');
 
 -- --------------------------------------------------------
 
@@ -85,6 +107,13 @@ CREATE TABLE `tanks` (
   `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `tanks`
+--
+
+INSERT INTO `tanks` (`id`, `names`, `ip`, `country`, `province`, `district`, `sector`, `cell`, `description`, `manager_id`, `time`) VALUES
+(1, 'Huye station', '123456789', 'Rwanda', 'South', 'Huye', 'Ngoma', 'example', 'Ikigega cya petrol', 1, '2021-08-14 20:56:32');
+
 -- --------------------------------------------------------
 
 --
@@ -100,6 +129,13 @@ CREATE TABLE `user` (
   `manager_id` int NOT NULL,
   `tank_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `names`, `email`, `phone`, `password`, `manager_id`, `tank_id`) VALUES
+(1, 'Aime Didier ', 'aimedidiermugisha@gmail.com', '0788750979', '3b081fd5426c134088a9b1466ff4c224', 1, 1);
 
 --
 -- Indexes for dumped tables
@@ -152,31 +188,31 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `manager`
 --
 ALTER TABLE `manager`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tanks`
 --
 ALTER TABLE `tanks`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

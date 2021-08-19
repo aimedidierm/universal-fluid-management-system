@@ -106,9 +106,9 @@ require 'php-includes/check-login.php';
             <label>Names </label>
             <input class="form-control" name="names" type="text" required><br>
             <label>Email </label>
-            <input class="form-control" name="email" type="text" required><br>
+            <input class="form-control" name="email" type="email" required><br>
             <label>Phone </label>
-            <input class="form-control" name="phone" type="text" required><br>
+            <input class="form-control" name="phone" type="number" required><br>
             <label>Password </label>
             <input class="form-control" name="password" type="password" required><br>
             <button type="submit" name="add" class="btn btn-lg btn-success btn-block">Create acount</button>
