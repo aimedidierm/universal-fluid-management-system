@@ -1,9 +1,19 @@
+/*
+trigger -> 7
+echo -> 8
+SDA -> A4
+SCL-> A5
+*/
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 #define trigger 7
 #define echo 8
+/*
+22cm->100%
+tanksize=22/100
+*/
+float tanksize=0.22,time=0,distance=0,precent=0;
 
-float time=0,distance=0;
 LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 
 void setup()
@@ -17,10 +27,6 @@ void setup()
   lcd.setCursor(4,1);
   lcd.print("M system");
   lcd.setCursor(0,2);
-  delay(2000);
-  lcd.print(" Ultra sonic");
-  lcd.setCursor(0,1);
-  lcd.print("Distance Meter");
   delay(2000);
 }
 
@@ -36,13 +42,8 @@ void loop()
  delayMicroseconds(2);
  time=pulseIn(echo,HIGH);
  distance=time*340/20000;
+ precent=100-(distance/tanksize);
  lcd.clear();
- lcd.print("Distance:");
- lcd.print(distance);
- lcd.print("cm");
- lcd.setCursor(0,1);
- lcd.print("Distance:");
- lcd.print(distance/100);
- lcd.print("m");
+ lcd.print(precent);
  delay(1000);
 }
