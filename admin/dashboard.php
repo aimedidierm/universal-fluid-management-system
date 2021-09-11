@@ -8,6 +8,7 @@ require 'php-includes/check-login.php';
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="5">
 
 <title>UFM - Admin Dashboard</title>
 <link  rel="stylesheet" href="../css/bootstrap.min.css"/>
@@ -43,7 +44,7 @@ require 'php-includes/check-login.php';
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
 <?php
-$sql = "SELECT s.tank_id, s.level, s.volume, t.names, t.id FROM status AS s JOIN tanks AS t WHERE t.id = s.tank_id limit 1";
+$sql = "SELECT s.tank_id, s.level, s.volume, s.time, t.names, t.id FROM status AS s JOIN tanks AS t WHERE t.id = s.tank_id limit 1";
 $stmt = $db->prepare($sql);
 $stmt->execute(array($tank_id));
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -133,12 +134,6 @@ series2.columns.template.strokeWidth = 2;
   ?>
   L
   </h1>
-  <form role="form" method="post" >
-    <fieldset>
-    <input  type="submit"  value="Open"  name="open" class="btn btn-primary"/>
-    <input  type="submit"  value="Close" name="close" class="btn btn-danger"/>
-    </fieldset>
-  </form>
 </div>
 <br>
 </div>

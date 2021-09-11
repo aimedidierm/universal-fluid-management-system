@@ -102,7 +102,7 @@ require 'php-includes/check-login.php';
           $cpassword = md5($password);
           $sql ="INSERT INTO user (names, email, phone, password, manager_id, tank_id) VALUES (?,?,?,?,?,?)";
           $stm = $db->prepare($sql);
-          if ($stm->execute(array($names, $email, $phone, $password, $manager_id, $tank_id))) {
+          if ($stm->execute(array($names, $email, $phone, $cpassword, $manager_id, $tank_id))) {
             print "<script>alert('your user added');window.location.assign('users.php')</script>";
           }
         }

@@ -8,6 +8,7 @@ require 'php-includes/check-login.php';
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="5">
 
 <title>UFM - Manager Dashboard</title>
 <link  rel="stylesheet" href="../css/bootstrap.min.css"/>
@@ -139,12 +140,6 @@ series2.columns.template.strokeWidth = 2;
   ?>
   L
   </h1>
-  <form role="form" method="post" >
-    <fieldset>
-    <input  type="submit"  value="Open"  name="open" class="btn btn-primary"/>
-    <input  type="submit"  value="Close" name="close" class="btn btn-danger"/>
-    </fieldset>
-  </form>
 </div>
 <br>
 </div>

@@ -71,15 +71,20 @@ void loop()
     lcd.print("Pump ON");
   }
  
- //if (StartbuttonState == HIGH && pumpState == 0) { 
 if (StartbuttonState == HIGH) {   
     // turn Pump on:    
     digitalWrite(pump, HIGH);
     pumpState = 1; 
-  }
-// if (StopbuttonState == HIGH && pumpState == 1) {  
+  } 
 if (StopbuttonState == HIGH) {  
     // turn Pump off:    
+    digitalWrite(pump, LOW);
+    pumpState = 0;
+  }
+  
+  if (precent >0 && precent <=85) {   
+    // turn Pump off:
+  } else {
     digitalWrite(pump, LOW);
     pumpState = 0;
   }
