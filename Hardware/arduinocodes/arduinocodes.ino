@@ -7,10 +7,16 @@ echo -> 8
 SDA -> A4
 SCL-> A5
 */
+#include <SoftwareSerial.h>
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>
 #define trigger 7
 #define echo 8
+#define rxPin 10
+#define txPin 11
+
+SoftwareSerial sim800L(rxPin,txPin); 
+
 const int Startbutton =  6;
 const int Stopbutton =  5;
 const int pump =  4;
@@ -29,6 +35,7 @@ LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD address to 0x27 for a 16 chars
 
 void setup()
 {
+  sim800L.begin(115200);
   pinMode(trigger,OUTPUT);
   pinMode(echo,INPUT);
   pinMode(Startbutton,INPUT);
@@ -87,6 +94,10 @@ if (StopbuttonState == HIGH) {
   } else {
     digitalWrite(pump, LOW);
     pumpState = 0;
+  }
+  if (precent <=15) {   
+    sim800L.println("ATD +250788750979;");
+    
   }
  delay(1000);
 }
