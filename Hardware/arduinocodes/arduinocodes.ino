@@ -67,6 +67,11 @@ void loop()
  distance=time*340/20000;
  precent=100-(distance/tanksize);
  liveliters=(precent/100)*liters;
+ String url;
+ url = "http://ENTER_YOUR_WEBSITE/gsmdata.php?per=";
+ url += precent;
+ sim800L.print("AT+HTTPPARA=\"URL\",\"");
+ sim800L.print(url);
  lcd.clear();
  lcd.setCursor(0,0);
  lcd.print(liveliters);
