@@ -96,7 +96,7 @@ require 'php-includes/check-login.php';
           $cpassword = md5($password);
           $sql ="INSERT INTO manager (names, email, phone, password) VALUES (?,?,?,?)";
           $stm = $db->prepare($sql);
-          if ($stm->execute(array($names, $email, $phone, $password))) {
+          if ($stm->execute(array($names, $email, $phone, $cpassword))) {
             print "<script>alert('your manager added');window.location.assign('managers.php')</script>";
           }
         }
