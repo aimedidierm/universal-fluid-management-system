@@ -1,12 +1,3 @@
-/*
-Pump -> 4
-Stopbutton -> 5
-Startbutton -> 6
-trigger -> 7
-echo -> 8
-SDA -> A4
-SCL-> A5
-*/
 #include <SoftwareSerial.h>
 #include <Wire.h> 
 #include <LiquidCrystal_I2C.h>

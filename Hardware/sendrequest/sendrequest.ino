@@ -1,56 +1,171 @@
 #include <SoftwareSerial.h>
+SoftwareSerial GSM(10, 11); // RX, TX
 
-#define rxPin 2
-#define txPin 3
-SoftwareSerial sim800L(rxPin,txPin); 
+enum _parseState {
+  PS_DETECT_MSG_TYPE,
 
-int  per=50;
+  PS_IGNORING_COMMAND_ECHO,
+
+  PS_HTTPACTION_TYPE,
+  PS_HTTPACTION_RESULT,
+  PS_HTTPACTION_LENGTH,
+
+  PS_HTTPREAD_LENGTH,
+  PS_HTTPREAD_CONTENT
+};
+
+byte parseState = PS_DETECT_MSG_TYPE;
+char buffer[80];
+byte pos = 0;
+
+int contentLength = 0;
+
+void resetBuffer() {
+  memset(buffer, 0, sizeof(buffer));
+  pos = 0;
+}
+
+void sendGSM(const char* msg, int waitMs = 500) {
+  GSM.println(msg);
+  delay(waitMs);
+  while(GSM.available()) {
+    parseATText(GSM.read());
+  }
+}
+
 void setup()
 {
+  GSM.begin(9600);
+  Serial.begin(9600);
   
-  //Begin serial communication with Arduino and SIM800L
-  sim800L.begin(9600);
-
-
-  Serial.println("Initializing...");
-  
+  sendGSM("AT+SAPBR=3,1,\"APN\",\"vodafone\"");  
+  sendGSM("AT+SAPBR=1,1",3000);
+  sendGSM("AT+HTTPINIT");  
+  sendGSM("AT+HTTPPARA=\"CID\",1");
+  sendGSM("AT+HTTPPARA=\"URL\",\"http://www.iforce2d.net/test.php\"");
+  sendGSM("AT+HTTPACTION=0");
 }
 
 void loop()
-{
-      String url;
-      url = "http://ENTER_YOUR_WEBSITE/gsmdata.php?per=";
-      url += per;
-
-      //url = "http://ahmadssd.000webhostapp.com/gpsdata.php?lat=222&lng=222";
-          
-    sendATcommand("AT+CFUN=1", "OK", 2000);
-    //AT+CGATT = 1 Connect modem is attached to GPRS to a network. AT+CGATT = 0, modem is not attached to GPRS to a network
-    sendATcommand("AT+CGATT=1", "OK", 2000);
-    //Connection type: GPRS - bearer profile 1
-    sendATcommand("AT+SAPBR=3,1,\"Contype\",\"GPRS\"", "OK", 2000);
-    //sets the APN settings for your network provider.
-    sendATcommand("AT+SAPBR=3,1,\"APN\",\"internet\"", "OK", 2000);
-    //enable the GPRS - enable bearer 1
-    sendATcommand("AT+SAPBR=1,1", "OK", 2000);
-    //Init HTTP service
-    sendATcommand("AT+HTTPINIT", "OK", 2000); 
-    sendATcommand("AT+HTTPPARA=\"CID\",1", "OK", 1000);
-    //Set the HTTP URL sim800.print("AT+HTTPPARA="URL","http://ahmadssd.000webhostapp.com/gpsdata.php?lat=222&lng=222"\r");
-    sim800L.print("AT+HTTPPARA=\"URL\",\"");
-    sim800L.print(url);
-    sendATcommand("\"", "OK", 1000);
-    //Set up the HTTP action
-    sendATcommand("AT+HTTPACTION=0", "0,200", 1000);
-    //Terminate the HTTP service
-    sendATcommand("AT+HTTPTERM", "OK", 1000);
-
+{  
+  while(GSM.available()) {
+    parseATText(GSM.read());
   }
-  return 1;    
 }
 
-//AT+CFUN=1
-//AT+CGATT=1
-//AT+SAPBR=3,1,"Contype","GPRS"
-//AT+SAPBR=3,1,"APN","internet"
-//AT+SAPBR=1,1
+void parseATText(byte b) {
+
+  buffer[pos++] = b;
+
+  if ( pos >= sizeof(buffer) )
+    resetBuffer(); // just to be safe
+
+  switch (parseState) {
+  case PS_DETECT_MSG_TYPE: 
+    {
+      if ( b == '\n' )
+        resetBuffer();
+      else {        
+        if ( pos == 3 && strcmp(buffer, "AT+") == 0 ) {
+          parseState = PS_IGNORING_COMMAND_ECHO;
+        }
+        else if ( b == ':' ) {
+          //Serial.print("Checking message type: ");
+          //Serial.println(buffer);
+
+          if ( strcmp(buffer, "+HTTPACTION:") == 0 ) {
+            Serial.println("Received HTTPACTION");
+            parseState = PS_HTTPACTION_TYPE;
+          }
+          else if ( strcmp(buffer, "+HTTPREAD:") == 0 ) {
+            Serial.println("Received HTTPREAD");            
+            parseState = PS_HTTPREAD_LENGTH;
+          }
+          resetBuffer();
+        }
+      }
+    }
+    break;
+
+  case PS_IGNORING_COMMAND_ECHO:
+    {
+      if ( b == '\n' ) {
+        Serial.print("Ignoring echo: ");
+        Serial.println(buffer);
+        parseState = PS_DETECT_MSG_TYPE;
+        resetBuffer();
+      }
+    }
+    break;
+
+  case PS_HTTPACTION_TYPE:
+    {
+      if ( b == ',' ) {
+        Serial.print("HTTPACTION type is ");
+        Serial.println(buffer);
+        parseState = PS_HTTPACTION_RESULT;
+        resetBuffer();
+      }
+    }
+    break;
+
+  case PS_HTTPACTION_RESULT:
+    {
+      if ( b == ',' ) {
+        Serial.print("HTTPACTION result is ");
+        Serial.println(buffer);
+        parseState = PS_HTTPACTION_LENGTH;
+        resetBuffer();
+      }
+    }
+    break;
+
+  case PS_HTTPACTION_LENGTH:
+    {
+      if ( b == '\n' ) {
+        Serial.print("HTTPACTION length is ");
+        Serial.println(buffer);
+        
+        // now request content
+        GSM.print("AT+HTTPREAD=0,");
+        GSM.println(buffer);
+        
+        parseState = PS_DETECT_MSG_TYPE;
+        resetBuffer();
+      }
+    }
+    break;
+
+  case PS_HTTPREAD_LENGTH:
+    {
+      if ( b == '\n' ) {
+        contentLength = atoi(buffer);
+        Serial.print("HTTPREAD length is ");
+        Serial.println(contentLength);
+        
+        Serial.print("HTTPREAD content: ");
+        
+        parseState = PS_HTTPREAD_CONTENT;
+        resetBuffer();
+      }
+    }
+    break;
+
+  case PS_HTTPREAD_CONTENT:
+    {
+      // for this demo I'm just showing the content bytes in the serial monitor
+      Serial.write(b);
+      
+      contentLength--;
+      
+      if ( contentLength <= 0 ) {
+
+        // all content bytes have now been read
+
+        parseState = PS_DETECT_MSG_TYPE;
+        resetBuffer();
+      }
+    }
+    break;
+  }
+}

@@ -1,47 +1,45 @@
 #include <SoftwareSerial.h>
 
-#define rxPin 10
-#define txPin 11
-SoftwareSerial sim800L(rxPin,txPin); 
+SoftwareSerial sim800l(10, 11); // RX,TX for Arduino and for the module it's TXD RXD, they should be inverted
+
 
 void setup()
 {
-  //Begin serial communication with Arduino and Arduino IDE (Serial Monitor)
-  Serial.begin(115200);
-  
-  //Begin serial communication with Arduino and SIM800L
-  sim800L.begin(115200);
-
-  Serial.println("Initializing...");
+ 
+  sim800l.begin(9600);   //Module baude rate, this is on max, it depends on the version
+  Serial.begin(9600);   
   delay(1000);
 }
-
+ 
 void loop()
 {
-  while(sim800L.available()){
-    Serial.println(sim800L.readString());
+  
+  while(1) {            //And if it's pressed
+    Serial.println("Button pressed");   //Shows this message on the serial monitor
+    delay(200);                         //Small delay to avoid detecting the button press many times
+    
+    SendSMS();                          //And this function is called
+
+ }
+ 
+  if (sim800l.available()){            //Displays on the serial monitor if there's a communication from the module
+    Serial.write(sim800l.read()); 
   }
-  while(Serial.available())  {
-    sim800L.println(Serial.readString());
-  }
-  init_sms();
-  send_data("Hi biraza kujyenda neza");
-  send_sms();
-  delay(5000);
 }
-void init_sms()
+ 
+void SendSMS()
 {
-   sim800L.println("AT+CMGF=1");
-   delay(200);
-   sim800L.println("AT+CMGS=\"+250788750979\"");
-   delay(200);
-}
-void send_data(String message)
-{
-  sim800L.println(message);
-  delay(200);
-}
-void send_sms()
-{
-  sim800L.write((char)26);
+  Serial.println("Sending SMS...");               //Show this message on serial monitor
+  sim800l.print("AT+CMGF=1\r");                   //Set the module to SMS mode
+  delay(100);
+  sim800l.print("AT+CMGS=\"+250738584462\"\r");  //Your phone number don't forget to include your country code, example +212123456789"
+  delay(500);
+  sim800l.print("SIM800l is working");       //This is the text to send to the phone number, don't make it too long or you have to modify the SoftwareSerial buffer
+  delay(500);
+  sim800l.print((char)26);// (required according to the datasheet)
+  delay(500);
+  sim800l.println();
+  Serial.println("Text Sent.");
+  delay(500);
+
 }
