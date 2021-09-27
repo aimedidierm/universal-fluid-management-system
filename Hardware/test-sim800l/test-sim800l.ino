@@ -7,10 +7,10 @@ SoftwareSerial sim800L(rxPin,txPin);
 void setup()
 {
   //Begin serial communication with Arduino and Arduino IDE (Serial Monitor)
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   //Begin serial communication with Arduino and SIM800L
-  sim800L.begin(9600);
+  sim800L.begin(115200);
 
   Serial.println("Initializing...");
   delay(1000);
