@@ -22,7 +22,7 @@ int var=0;
 String apn = "www.tigo.rw";                    //APN
 String apn_u = "";                     //APN-Username
 String apn_p = "";                     //APN-Password
-String url = "http://147.182.250.105/universal-fluid-management-system/gsmdata.php?per=";  //URL of Server
+String url = "http://143.110.228.128/universal-fluid-management-system/gsmdata.php?per=";  //URL of Server
 SoftwareSerial SWserial(10, 11); // RX, TX
 /*
 22cm -> 100% max
@@ -121,7 +121,7 @@ void SendSMS()
   lcd.print("Sending SMS...");               //Show this message on serial monitor
   SWserial.println("AT+CMGF=1\r");                   //Set the module to SMS mode
   delay(100);
-  SWserial.println("AT+CMGS=\"+250738584462\"\r");  //Your phone number don't forget to include your country code, example +212123456789"
+  SWserial.println("AT+CMGS=\"+250723009502\"\r");  //Your phone number don't forget to include your country code, example +212123456789"
   delay(500);
   SWserial.println("Balance is low 15%");       //This is the text to send to the phone number, don't make it too long or you have to modify the SoftwareSerial buffer
   delay(500);

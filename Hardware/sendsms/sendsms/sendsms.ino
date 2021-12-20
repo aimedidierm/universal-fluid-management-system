@@ -11,6 +11,8 @@ Serial.println("Sistem Started...");
 sim.begin(9600);
 delay(1000);
 Serial.println("Type s to send an SMS, r to receive an SMS, and c to make a call");
+SendMessage();
+callNumber();
 }
 void loop() {
 if (Serial.available() > 0)
